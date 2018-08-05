@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>spa-demo</title>
+    <style type="text/css">
+        .car {
+            background-color : #99ccff;
+        }
+        .animal {
+            background-color : #7766cc;
+            color: #eee;
+        }
+        #pages > div{
+            display : none;
+            width: 900px;
+            height: 700px;
+        }
+        #pages [active]{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#/pages/car.html">car</a>
+        <a href="#/pages/animal.html">animal</a>
+    </nav>
+    <!-- 需要切换展示的内容 -->
+    <div id="pages">
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../scripts/fetch.js"></script>
+<script type="text/javascript" src = "../scripts/router.js"></script>
+<script type="text/javascript">
+    //判断是否有该dom已经被加载了
+    function before(path){
+        let dom = document.getElementById(path);
+        return !dom;
+    }
+
+    //创建div内容
+    function createPage( id, body, css ){
+        let dom = document.createElement("div");
+        dom.id = id;
+        document.getElementById('pages').appendChild(dom);
+        dom.innerHTML = body;
+        dom.classList.add(css);
+    }
+
+    //展示切换页面,其余页面内容隐藏
+    function showPage(path){
+        document.getElementById("pages").childNodes.forEach( item => {
+            if(item instanceof HTMLDivElement){
+                item.removeAttribute('active');
+            }
+        });
+        document.getElementById(path).setAttribute('active','');
+    }
+
+    //注册在路由切换之前的执行的before方法
+    Router.registerBefore(before);
+    //注册在路由切换之后的执行的finally方法
+    Router.registerFinally(showPage);
+
+    //注册路由地址
+    Router.map("./pages/car.html",function(body){
+        createPage("./pages/car.html",body,'car');
+    });
+    Router.map("./pages/animal.html",function(body){
+        createPage("./pages/animal.html",body,'animal');
+    });
+
+    //页面加载完毕后，若第一次加载URL中有带有#之后的内容，则切换一次页面
+    ( () => {
+        if(Router.getHash()){
+            Router.switching("."+Router.getHash());
+        }
+    } )();
+</script>
+</html>
