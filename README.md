@@ -34,7 +34,9 @@
   });
   ```
 
-该案例核心逻辑
+该案例核心逻辑流程图:
+
+> 如果流程图渲染不出来的，请访问查看该[图片](./flow.png)
 
 ```flow
 st=>start: url锚点访问
@@ -52,3 +54,4 @@ switchBefore(no)->switchFinally
 switching->switchFinally
 switchFinally->e
 ```
+
